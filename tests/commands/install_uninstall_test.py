@@ -304,6 +304,13 @@ FAILING_PRE_COMMIT_RUN = re_assert.Matches(
     r'\n'
     r'Fail\n'
     r'foo\n'
+    r'\n'
+    r'Failing short hook\.+Failed\n'
+    r'- hook id: failing_short_hook\n'
+    r'- exit code: 1\n'
+    r'\n'
+    r'Fail\n'
+    r'foo\n'
     r'\n$',
 )
 

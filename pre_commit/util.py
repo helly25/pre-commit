@@ -12,6 +12,7 @@ from collections.abc import Generator
 from types import TracebackType
 from typing import Any
 from typing import Callable
+from typing import cast
 
 from pre_commit import parse_shebang
 
@@ -205,15 +206,16 @@ else:  # pragma: no cover
 def _handle_readonly(
         func: Callable[[str], object],
         path: str,
-        exc: OSError,
-) -> None:
+        exc: Exception,
+) -> object:
     if (
-            func in (os.rmdir, os.remove, os.unlink) and
-            exc.errno in {errno.EACCES, errno.EPERM}
+        func in (os.rmdir, os.remove, os.unlink) and
+        issubclass(type(exc), OSError) and
+        cast(OSError, exc).errno in {errno.EACCES, errno.EPERM}
     ):
         for p in (path, os.path.dirname(path)):
             os.chmod(p, os.stat(p).st_mode | stat.S_IWUSR)
-        func(path)
+        return func(path)
     else:
         raise
 
@@ -224,7 +226,7 @@ if sys.version_info < (3, 12):  # pragma: <3.12 cover
         path: str,
         excinfo: tuple[type[OSError], OSError, TracebackType],
     ) -> None:
-        return _handle_readonly(func, path, excinfo[1])
+        _handle_readonly(func, path, excinfo[1])
 
     def rmtree(path: str) -> None:
         shutil.rmtree(path, ignore_errors=False, onerror=_handle_readonly_old)

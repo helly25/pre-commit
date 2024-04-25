@@ -1,5 +1,15 @@
 -   id: failing_hook
     name: Failing hook
+    description: |
+        Failing Hook Description
+        Longer description.
+    entry: bin/hook.sh
+    language: script
+    files: .
+
+-   id: failing_short_hook
+    name: Failing short hook
+    description: Failing Short Hook Description
     entry: bin/hook.sh
     language: script
     files: .
