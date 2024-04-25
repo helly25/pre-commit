@@ -1,6 +1,9 @@
 *.egg-info
 *.py[co]
+*.pytest_cache
 /.coverage
 /.tox
+/build
 /dist
 .vscode/
+testing/resources/python_hooks_repo/build/lib/foo.py
